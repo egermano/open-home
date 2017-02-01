@@ -1,0 +1,118 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: -23.41
+  longitude: -46.30
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 729
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Sao_Paulo
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+zeroconf:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: senha
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+recorder:
+  purge_days: 3
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+# Weather Prediction
+#sensor:
+#  platform: yr
+
+sensor:
+  - platform: darksky
+    api_key: 'sua-chave-da-api'
+    monitored_conditions:
+      - summary
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - precip_type
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - apparent_temperature
+      - dew_point
+      - wind_speed
+      - wind_bearing
+      - cloud_cover
+      - humidity
+      - pressure
+      - visibility
+      - ozone
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+      - temperature_max
+      - temperature_min
+      - apparent_temperature_max
+      - apparent_temperature_min
+      - precip_intensity_max
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
+  - platform: google_travel_time
+    api_key: 'sua-chave-da-api'
+    origin: Rua Vergueiro, 1000, Sao Paulo, Brazil
+    destination: Avenida Paulista, 500, Sao Paulo, Brazil
+
+mqtt:
+  broker: localhost
+  port: 8883 #1883
+  client_id: 'homeassistant'
+  username: 'ha'
+  password: 'ha'
+  certificate: '/etc/mosquitto/certs/ca.crt'
+  keepalive: 60
+
+notify:
+  platform: telegram
+  api_key: 'sua-chave-da-api'
+  chat_id: pl_home_bot
+
+device_tracker:
+  - platform: owntracks
+
+light:
+  - platform: mqtt
+    name: 'Lustre Mesa de Jantar'
+    state_topic: 'sala/lustre-jantar/status'
+    command_topic: 'sala/lustre-jantar/switch'
+    optimistic: false
+
+tts:
+  - platform: google
