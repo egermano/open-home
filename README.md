@@ -24,8 +24,6 @@ O projeto inteiro da OpenHome vai ser controlado pelo Home Assistant, uma plataf
 
 É uma plataforma open-source de automação residencial feita em Python 3. Ele vai ser como um sistema operacional para a sua casa.
 
-#### Instalação
-
 Se você está usando um Raspberry Pi você pode usar a a instalação completa (All-In-One Installer), as instruções estão [aqui](https://home-assistant.io/getting-started/installation-raspberry-pi-all-in-one/). Recentemente eles também lançaram uma imagem para Rpi, se vc quiser [saber mais](https://home-assistant.io/blog/2016/10/01/we-have-raspberry-image-now/).
 
 Continuando a instalação passo a passo. Antes de mais nada precisamos atualizar o sistema, instalar o Python e todas as dependências.
@@ -111,3 +109,94 @@ Referências:
 
 - [Installation in Virtualenv](https://home-assistant.io/getting-started/installation-virtualenv/)
 - [Autostart Using Systemd](https://home-assistant.io/getting-started/autostart-systemd/)
+
+### Mosquitto MQTT broker
+
+Para instalar a última versão do Mosquitto, precisamos usar o repositório deles.
+
+```
+wget http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+sudo apt-key add mosquitto-repo.gpg.key
+```
+
+Aí tornamos o repositório deles disponível para o `apt` e atualizamos ele com as novas informações.
+
+```
+cd /etc/apt/sources.list.d/
+sudo wget http://repo.mosquitto.org/debian/mosquitto-jessie.list
+sudo apt-get update
+```
+
+Só depois podemos instalar o mosquitto e o cliente dele para testarmos a instalação.
+
+```
+sudo apt-get install mosquitto mosquitto-clients
+```
+
+O protocolo MQTT suporta as funcionalidades de autenticação e [ACL](https://en.wikipedia.org/wiki/Access_control_list) para proteger e tornar mais seguro o uso.
+Para criar e configurar um usuário nós usamos o aplicativo `mosquitto_passwd`.
+
+Então vamos criar o usuário do Home Assistant.
+
+```
+cd /etc/mosquitto/conf.d/
+sudo touch pwfile
+sudo mosquitto_passwd pwfile ha
+```
+
+E para configurar as permissões de publishing/subscribing, nos precisamos criar o `aclfile`, que vai configurar para cada usuário as permissões de tópicos que ele tem acesso.
+
+```
+cd /etc/mosquitto/conf.d/
+sudo touch aclfile
+```
+
+Exemplos de ACL:
+
+```
+user ha
+topic write sala/luz1/switch
+topic write sala/luz2/switch
+...
+topic read sala/luz1/switch
+topic read sala/luz2/switch
+```
+
+Aqui o usuário `ha` vai poder ler e excrever no tópicos: `sala/luz1/switch` e `sala/luz2/switch`.
+
+Recomendo que você coloque mais um nível de segurança no seu mosquitto, TLS, assim além do usuário e senha e o ACL você coloca ele com um certificado de segurança. [Veja aqui](mosquitto/tls) as instruçõe para fazer isso com o seu.
+
+```
+allow_anonymous false
+password_file /etc/mosquitto/conf.d/pwfile
+acl_file /etc/mosquitto/conf.d/aclfile
+listener 8883 (optional)
+cafile /etc/mosquitto/certs/ca.crt (optional)
+certfile /etc/mosquitto/certs/raspberrypi.crt
+keyfile /etc/mosquitto/certs/raspberrypi.key (optional)
+```
+
+Para configurar o Home Assistant utilizar o protocolo MQTT você só precisa adicionar essas informações na configuração.
+
+```yaml
+mqtt:
+  broker: 'localhost' #127.0.0.1
+  port: 8883 #1883
+  client_id: 'ha'
+  username: 'ha'
+  password: '[SUA-SENHA]' (optional)
+  certificate: '/etc/mosquitto/certs/ca.crt' (optional)
+```
+
+Arquivos importantes:
+
+- Configuração: `/etc/mosquitto/conf.d/mosquitto.conf`
+- Logs: `/var/log/mosquitto/mosquitto.log`
+
+Minha configuração completa está disponível [aqui](configuration/mosquitto).
+
+Referências:
+
+- [Mosquitto Debian repository](https://mosquitto.org/2013/01/mosquitto-debian-repository/
+
+Essa é a instalação básica do Home Assistant com o Mosquitto. Agora você pode instalar mais componentes, todos os componentes que eu estou usando estão [aqui](components)
