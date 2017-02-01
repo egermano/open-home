@@ -1,7 +1,5 @@
 # Automação residencial com hardware e software open
 
-[TOC]
-
 ## Introdução
 
 Esse é um projeto de automação residência que usa, em sua maioria, apenas hardware e software open-source, isso é chamado por OpenHome. Aqui você vai ver como ter uma central que gerencia todos os seus devices, ou coisas, e também como montar, programar e automatizar algumas coisas para a sua casa.
