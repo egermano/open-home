@@ -72,7 +72,7 @@ sudo -u hass -H /srv/hass/bin/hass
 Para iniciar o Home Assistant no boot, sempre que seu computador ligar, vamos precisar criar um serviço para o `systemd`. Mas alguém já fez isso, é só fazer download e instalar o serviço.
 
 ```
-sudo wget https://raw.githubusercontent.com/home-assistant/home-assistant/master/script/home-assistant%40.service -O /etc/systemd/system/home-assistant@hass.service
+sudo wget https://raw.githubusercontent.com/egermano/open-home/master/autostart/systemd/home-assistant.service -O /etc/systemd/system/home-assistant@hass.service
 ```
 
 Como a gente criar um usuário para executar o Home Assistant Vamos precisar fazer uma pequena modificação no serviço. Precisamos subistituir `/usr/bin/hass` por `/srv/hass/bin/hass`. A linha que você vai precisar alterar se parece com isso: `ExecStart=/srv/hass/bin/hass --runner`.
