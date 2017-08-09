@@ -11,7 +11,7 @@
 # /etc/init.d Service Script for Home Assistant
 # Created with: https://gist.github.com/naholyr/4275302#file-new-service-sh
 PRE_EXEC=""
-RUN_AS="USER"
+RUN_AS="hass"
 PID_FILE="/var/run/hass.pid"
 CONFIG_DIR="/var/opt/homeassistant"
 FLAGS="-v --config $CONFIG_DIR --pid-file $PID_FILE --daemon"
