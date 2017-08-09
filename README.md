@@ -1,4 +1,4 @@
-# Automação residencial com hardware e software open
+# Automação residencial com hardware e software open [![Build Status](https://travis-ci.org/egermano/open-home.svg?branch=master)](https://travis-ci.org/egermano/open-home)
 
 ## Introdução
 
