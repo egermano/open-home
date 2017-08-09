@@ -1,0 +1,8 @@
+language: bash
+
+before_script:
+  - mkdir test-CA
+  - cd test-CA
+
+script:
+    - bash ../mosquitto/tls/generate-CA.sh
